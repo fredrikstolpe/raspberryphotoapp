@@ -5,8 +5,9 @@
     "dependencies": {
         "express": "latest",
 	"configure": "latest",
-	"raspicam": "latest",
-	"q": "latest"
+	"q": "latest",
+	"moment": "latest",
+	"node-gpio" : "latest"
     },
     "author": "fredrik"
 }

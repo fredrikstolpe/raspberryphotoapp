@@ -1,3 +1,13 @@
 {
-    "port" : 80
+	"port" : 80,
+	"imageFolder" : "photos",
+	"image" : {
+		"width" : 640,
+		"height" : 640,
+		"quality" : 50
+	},
+	"pins" : {
+		"button" : "7",
+		"led" : "8"
+	}
 }
