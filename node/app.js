@@ -9,7 +9,7 @@ var app = express();
 app.use("/" + config.imageFolder, express.static(__dirname + "/" + config.imageFolder));
 
 app.get('/takephoto', function (req, res) {
-	console.log("takephoto");
+	console.log("Service takephoto");
 	cameraService.takePhoto()
 	.then(
 		function(value){
@@ -17,8 +17,8 @@ app.get('/takephoto', function (req, res) {
 			res.send(value);
 		},
 		function(error){
-			console.log("hej");
-			res.send('Failed');
+			console.log(error);
+			res.send(error);
 		}
 	)
 });
@@ -39,7 +39,19 @@ var button = new gpio.GPIO(config.pins.button);
 button.open();
 button.setMode(gpio.IN);
 button.on("changed", function (value) {
-	console.log(value);
+	if (value == 1)
+	{
+		console.log("Button takephoto")
+		cameraService.takePhoto()
+        	.then(
+			function(value){
+                        	console.log(value);
+                	},
+                	function(error){
+                        	console.log(error);
+                	}
+        	)
+	}
 });
 button.listen();
 
