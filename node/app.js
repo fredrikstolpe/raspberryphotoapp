@@ -1,6 +1,7 @@
 var express = require("express");
 var config = require("configure");
 var cameraService = require("./cameraservice.js");
+var glitchService = require("./glitchservice.js");
 var fs = require("fs");
 var gpio = require("node-gpio");
 
