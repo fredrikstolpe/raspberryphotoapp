@@ -4,10 +4,11 @@
     "description": "Raspberry photo app",
     "dependencies": {
         "express": "latest",
-	"configure": "latest",
-	"q": "latest",
-	"moment": "latest",
-	"node-gpio" : "latest"
+	   "configure": "latest",
+	   "q": "latest",
+	   "moment": "latest",
+	   "node-gpio" : "latest",
+       "child-process-promise" : "latest"
     },
     "author": "fredrik"
 }

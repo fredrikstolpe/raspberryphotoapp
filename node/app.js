@@ -10,8 +10,7 @@ var app = express();
 app.use("/" + config.imageFolder, express.static(__dirname + "/" + config.imageFolder));
 
 app.get('/takephoto', function (req, res) {
-	console.log("Service takephoto");
-	camera.takePhoto()
+	camera.takePhoto(config.image.width, config.image.height, config.image.quality, config.imageFolder)
 	.then(
 		function(value){
 			console.log(value);
@@ -25,18 +24,18 @@ app.get('/takephoto', function (req, res) {
 });
 
 app.get('/glitchphoto/:filename', function (req, res) {
-        console.log("Service glitchphoto");
-        glitcher.glitch1(config.imageFolder + "/" + req.params.filename,config.imageFolder + "/g_" + req.params.filename)
-        .then(
-                function(value){
-                        console.log(value);
-                        res.send(value);
-                },
-                function(error){
-                        console.log(error);
-                        res.send(error);
-                }
-        )
+	console.log("Service glitchphoto");
+	glitcher.glitch1(config.imageFolder + "/" + req.params.filename,config.imageFolder + "/g_" + req.params.filename)
+	.then(
+	  function(value){
+      console.log(value);
+      res.send(value);
+	  },
+	  function(error){
+      console.log(error);
+      res.send(error);
+	  }
+	)
 });
 
 
@@ -55,19 +54,18 @@ app.get("/latestphotos", function (req, res){
 var button = new gpio.GPIO(config.pins.button);
 button.open();
 button.setMode(gpio.IN);
-button.on("changed", function (value) {
-	if (value == 1)
-	{
+button.on("changed", function (value){
+	if (value == 1){
 		console.log("Button takephoto")
-		camera.takePhoto()
-        	.then(
+		camera.takePhoto(config.image.width, config.image.height, config.image.quality, config.imageFolder)
+  	.then(
 			function(value){
-                        	console.log(value);
-                	},
-                	function(error){
-                        	console.log(error);
-                	}
-        	)
+      	console.log(value);
+    	},
+    	function(error){
+      	console.log(error);
+    	}
+  	)
 	}
 });
 button.listen();

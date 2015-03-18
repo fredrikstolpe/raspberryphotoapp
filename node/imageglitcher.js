@@ -1,6 +1,6 @@
 var util = require("util");
 var q = require("q");
-var child_process = require("child_process");
+var childProcess = require("child-process-promise");
 
 var self = this;
 
@@ -40,26 +40,12 @@ function randomRoll(left, top, negative){
   return util.format("-roll %s%s", rndLeft, rndTop);
 }
 
-function executeCommand(command){
-  console.log("-> " + command);
-  var deferred = q.defer();
-  child_process.exec(command, function(error, stdout, stderr){
-    if (error){
-      deferred.reject(error);
-    }
-    else{
-      deferred.resolve(stdout);
-    }
-  });
-  return deferred.promise;   
-}
-
 module.exports = {
 
   glitch1 : function(inFilePath, outFilePath){
     var deferred = q.defer();
     var command = util.format("convert %s -region x233+0+100 -roll +40+0 %s", inFilePath, outFilePath);
-    executeCommand(command)
+    childProcess.exec(command)
     .then(
       function(result){
         deferred.resolve(outFilePath);
@@ -74,7 +60,7 @@ module.exports = {
   turquoise : function(inFilePath, outFilePath){
     var deferred = q.defer();
     var command = util.format("convert %s -colorspace Gray -lat 50x50 -black-threshold 50% -fill turquoise1 -opaque black %s", inFilePath, outFilePath);
-    executeCommand(command)
+    childProcess.exec(command)
     .then(
       function(result){
         deferred.resolve(outFilePath);
@@ -89,7 +75,7 @@ module.exports = {
   red : function(inFilePath, outFilePath){
     var deferred = q.defer();
     var command = util.format("convert %s -colorspace Gray -lat 50x50 -black-threshold 50% -fill red2 -opaque black %s", inFilePath, outFilePath);
-    executeCommand(command)
+    childProcess.exec(command)
     .then(
       function(result){
         deferred.resolve(outFilePath);
@@ -104,7 +90,7 @@ module.exports = {
   darken : function(inFilePath, inFilePath2, outFilePath){
     var deferred = q.defer();
     var command = util.format("composite %s %s -compose darken %s", inFilePath, inFilePath2, outFilePath);
-    executeCommand(command)
+    childProcess.exec(command)
     .then(
       function(result){
         deferred.resolve(outFilePath);
@@ -158,7 +144,7 @@ module.exports = {
   getImageSize : function(filePath){
     var deferred = q.defer();
     var command = util.format("identify %s", filePath);
-    executeCommand(command)
+    childProcess.exec(command)
     .then(
       function(result){
         var output = result.split(" ");
