@@ -1,7 +1,7 @@
 var express = require("express");
 var config = require("configure");
-var cameraService = require("./cameraservice.js");
-var glitchService = require("./glitchservice.js");
+var camera = require("./picamera.js");
+var glitcher = require("./imageglitcher.js");
 var fs = require("fs");
 var gpio = require("node-gpio");
 
@@ -11,7 +11,7 @@ app.use("/" + config.imageFolder, express.static(__dirname + "/" + config.imageF
 
 app.get('/takephoto', function (req, res) {
 	console.log("Service takephoto");
-	cameraService.takePhoto()
+	camera.takePhoto()
 	.then(
 		function(value){
 			console.log(value);
@@ -23,6 +23,22 @@ app.get('/takephoto', function (req, res) {
 		}
 	)
 });
+
+app.get('/glitchphoto/:filename', function (req, res) {
+        console.log("Service glitchphoto");
+        glitcher.glitch1(config.imageFolder + "/" + req.params.filename,config.imageFolder + "/g_" + req.params.filename)
+        .then(
+                function(value){
+                        console.log(value);
+                        res.send(value);
+                },
+                function(error){
+                        console.log(error);
+                        res.send(error);
+                }
+        )
+});
+
 
 app.get("/latestphotos", function (req, res){
 	fs.readdir(config.imageFolder, function(err, files){
@@ -43,7 +59,7 @@ button.on("changed", function (value) {
 	if (value == 1)
 	{
 		console.log("Button takephoto")
-		cameraService.takePhoto()
+		camera.takePhoto()
         	.then(
 			function(value){
                         	console.log(value);
