@@ -28,15 +28,6 @@ module.exports = {
 					deferred.reject(error);
 				}
 			)
-			/*childProcess.exec("raspistill -w " + config.image.width + "  -h " + config.image.height + " -q " + config.image.quality + " -o '" + path + "'", function(error, stdout, stderr){
-				self.cameraBusy = false;
-				if (error){
-					deferred.reject(error);
-				}
-				else{
-					deferred.resolve(filename);
-				}
-			})*/
 		}
 		return deferred.promise;
 	}

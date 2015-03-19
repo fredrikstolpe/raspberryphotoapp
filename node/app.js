@@ -3,6 +3,7 @@ var config = require("configure");
 var camera = require("./picamera.js");
 var glitcher = require("./imageglitcher.js");
 var fs = require("fs");
+
 var gpio = require("node-gpio");
 
 var app = express();
@@ -25,7 +26,8 @@ app.get('/takephoto', function (req, res) {
 
 app.get('/glitchphoto/:filename', function (req, res) {
 	console.log("Service glitchphoto");
-	glitcher.glitch1(config.imageFolder + "/" + req.params.filename,config.imageFolder + "/g_" + req.params.filename)
+	glitcher.
+	randomHorizontalRegionRoll(config.imageFolder + "/" + req.params.filename,config.imageFolder + "/g_" + req.params.filename)
 	.then(
 	  function(value){
       console.log(value);

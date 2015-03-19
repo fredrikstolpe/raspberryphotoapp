@@ -1,59 +1,36 @@
 var util = require("util");
 var q = require("q");
 var childProcess = require("child-process-promise");
-
-var self = this;
-
-function randomInt(low, high) {
-    return Math.floor(Math.random() * (high - low) + low);
-}
-
-function geometry(width, height, left, top) {
-  return util.format("%sx%s+%s+%s", width, height, left, top);
-}
-
-function region(geometry) {
-  return util.format("-region %s", geometry);
-}
-
-function randomRegion(width, height, left, top){
-  var width = (width == 0) ? 0 : randomInt(0,width);
-  var height = (height == 0) ? 0 : randomInt(0,height);
-  var left = (left == 0) ? 0 : randomInt(0,left);
-  var top = (top == 0) ? 0 : randomInt(0,top);
-  return util.format("-region %s", geometry(width, height, left, top));
-}
-
-function randomRoll(left, top, negative){
-  if(negative){
-    left += left;
-    top += top;
-  }
-  var rndLeft = (left == 0) ? 0 : randomInt(0,left);
-  var rndTop = (top == 0) ? 0 : randomInt(0,top);
-  if(negative){
-    rndLeft -= left;
-    rndTop -= top;
-  }
-  rndLeft = (rndLeft < 0) ? "" + rndLeft : "+" + rndLeft;
-  rndTop = (rndTop < 0) ? "" + rndTop : "+" + rndTop;
-  return util.format("-roll %s%s", rndLeft, rndTop);
-}
+var imCommandBuilder = require("./imcommandbuilder.js");
+var imHelper = require("./imhelper.js");
 
 module.exports = {
-
-  glitch1 : function(inFilePath, outFilePath){
+  randomHorizontalRegionRoll : function(inFilePath, outFilePath){
     var deferred = q.defer();
-    var command = util.format("convert %s -region x233+0+100 -roll +40+0 %s", inFilePath, outFilePath);
-    childProcess.exec(command)
+    imHelper.getImageSize(inFilePath)
     .then(
-      function(result){
-        deferred.resolve(outFilePath);
+      function(dimensions){
+        console.log("Image dimensions: " + dimensions.width + " x " + dimensions.height);
+        var command = new imCommandBuilder.IMCommand("convert", inFilePath, outFilePath);
+        for (var i = 0; i < 20; i++){
+          command.addRandomRegion(0,Math.floor(dimensions.height/10),0,dimensions.height-Math.floor(dimensions.height/10));
+          var rollWidth = Math.floor(dimensions.width/30);
+          command.addRandomRoll(0-rollWidth,rollWidth,0,0);
+        }
+        imHelper.exec(command.render())
+        .then(
+          function(result){
+            deferred.resolve(outFilePath);
+          },
+          function(error){
+            deferred.reject(error);
+          }
+        );
       },
       function(error){
         deferred.reject(error);
       }
-    );
+    )
     return deferred.promise;
   },
 
@@ -100,65 +77,5 @@ module.exports = {
       }
     );
     return deferred.promise;
-  },  
-  
-  glitch2 : function(inFilePath, outFilePath){
-    var deferred = q.defer();
-    var imageSize = this.getImageSize(inFilePath)
-    .then(
-      function(dimensions){
-        var commands = [];
-        for (var i = 0; i < 10; i++){
-          var regionRoll = util.format("%s %s", randomRegion(0,dimensions.height,0,Math.floor(dimensions.height/30)), randomRoll(Math.floor(dimensions.width/30),0,true));
-          commands.push(regionRoll);
-        }
-        var command = util.format("convert %s %s %s", inFilePath, commands.join(" "), outFilePath);
-        executeCommand(command)
-        .then(
-          function(result){
-            deferred.resolve(outFilePath);
-          },
-          function(error){
-            deferred.reject(error);
-          }
-        );
-      },
-      function(error){
-        deferred.reject(error);
-      }
-    )
-    /*var command = util.format("convert %s -region x233+0+100 -roll +40+0 %s", inFilePath, outFilePath);
-    executeCommand(command)
-    .then(
-      function(result){
-        deferred.resolve(outFilePath);
-      },
-      function(error){
-        deferred.reject(error);
-      }
-    );
-    */
-    return deferred.promise;
-  },  
-  
-  getImageSize : function(filePath){
-    var deferred = q.defer();
-    var command = util.format("identify %s", filePath);
-    childProcess.exec(command)
-    .then(
-      function(result){
-        var output = result.split(" ");
-        if (output.length >= 2){
-          var wh = output[2].split("x");
-          deferred.resolve({width:parseInt(wh[0]),height:parseInt(wh[1])});
-        }
-        deferred.reject("Could not read image size");
-      },
-      function(error){
-        deferred.reject(error);
-      }
-    );
-    return deferred.promise;
   }
-
 }
