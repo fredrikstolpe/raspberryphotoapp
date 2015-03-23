@@ -5,13 +5,13 @@ var imCommandBuilder = require("./imcommandbuilder.js");
 var imHelper = require("./imhelper.js");
 
 module.exports = {
-  randomHorizontalRegionRoll : function(inFilePath, outFilePath){
+  randomHorizontalRegionRoll : function(inFileName, outFileName, folder){
     var deferred = q.defer();
-    imHelper.getImageSize(inFilePath)
+    imHelper.getImageSize(imHelper.prependFolder(inFileName, folder))
     .then(
       function(dimensions){
         console.log("Image dimensions: " + dimensions.width + " x " + dimensions.height);
-        var command = new imCommandBuilder.IMCommand("convert", inFilePath, outFilePath);
+        var command = new imCommandBuilder.IMCommand("convert", imHelper.prependFolder(inFileName, folder), imHelper.prependFolder(outFileName, folder));
         for (var i = 0; i < 20; i++){
           command.addRandomRegion(0,Math.floor(dimensions.height/10),0,dimensions.height-Math.floor(dimensions.height/10));
           var rollWidth = Math.floor(dimensions.width/30);
@@ -20,7 +20,7 @@ module.exports = {
         imHelper.exec(command.render())
         .then(
           function(result){
-            deferred.resolve(outFilePath);
+            deferred.resolve(outFileName);
           },
           function(error){
             deferred.reject(error);
@@ -32,6 +32,26 @@ module.exports = {
       }
     )
     return deferred.promise;
+  },
+
+  splitChannel : function(inFileName, outFileName, folder, channel){
+    var command = new imCommandBuilder.IMCommand("convert", imHelper.prependFolder(inFileName, folder), imHelper.prependFolder(outFileName, folder));
+    command.addSeparateChannel(channel);
+    return imHelper.exec(command.render(), outFileName);
+  },
+
+  joinChannels : function(inFileNameR, inFileNameG, inFileNameB, outFileName, folder){
+    var fileNames = [imHelper.prependFolder(inFileNameR, folder), imHelper.prependFolder(inFileNameG, folder), imHelper.prependFolder(inFileNameB, folder)];
+    var command = new imCommandBuilder.IMCommand("convert", fileNames, imHelper.prependFolder(outFileName, folder));
+    command.addJoinChannels();
+    return imHelper.exec(command.render(), outFileName);
+  },
+
+  addScanLines : function(inFileName, outFileName, folder){
+    //var command = util.format("composite %s photos/scanlines.gif -compose darken %s", imHelper.prependFolder(inFileName, folder), imHelper.prependFolder(outFileName, folder));
+    var command = util.format("composite %s photos/scanlines.gif -compose difference     %s", imHelper.prependFolder(inFileName, folder), imHelper.prependFolder(outFileName, folder));
+    console.log(command);
+    return imHelper.exec(command, outFileName);
   },
 
   turquoise : function(inFilePath, outFilePath){

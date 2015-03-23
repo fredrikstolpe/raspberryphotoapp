@@ -32,15 +32,16 @@ function randomGeometry(maxWidth, maxHeight, maxLeft, maxTop){
 
 //IMCommand
 
-function IMCommand(command, inFileName, outFileName){
+function IMCommand(command, inFileNames, outFileName){
   this.command = command;
-  this.inFileName = inFileName;
+  this.inFileNames = inFileNames;
   this.outFileName = outFileName;
   this.commands = [];
 }
 
 IMCommand.prototype.render = function(){
-  return this.command + " " + this.inFileName + " " + this.commands.join(" ") + " " + this.outFileName;
+  var fileNames = Array.isArray(this.inFileNames) ? this.inFileNames.join(" ") : this.inFileNames;
+  return this.command + " " + fileNames + " " + this.commands.join(" ") + " " + this.outFileName;
 }
 
 IMCommand.prototype.addRegion = function(width, height, left, top){
@@ -59,6 +60,15 @@ IMCommand.prototype.addRandomRoll = function(minLeft, maxleft, minTop, maxTop){
   this.commands.push(util.format("-roll %s", randomLeftTop(minLeft, maxleft, minTop, maxTop)));
 }
 
+IMCommand.prototype.addSeparateChannel = function(channel){
+  this.commands.push(util.format("-channel %s -separate", channel));
+}
+
+IMCommand.prototype.addJoinChannels = function(){
+  this.commands.push("-set colorspace RGB -combine -gamma 0.8");
+}
+
+  
 //Export
 
 module.exports = {

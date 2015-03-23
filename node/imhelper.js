@@ -24,8 +24,30 @@ module.exports = {
     return deferred.promise;
   },
 
-  exec : function(command){
-    return childProcess.exec(command);
-  }
+  fileNameAppend : function(fileName, append){
+    var split = fileName.split(".");
+    return split[0] + append + "." + split[1];
+  },
 
+  prependFolder : function(fileName, folderName){
+    return folderName + "/" + fileName;
+  },
+
+  exec : function(command, outFileName){
+    console.log("Exec: " + command);
+    var deferred = q.defer();
+    
+    childProcess
+    .exec(command)
+    .then(
+      function(result){
+        deferred.resolve(outFileName);
+      },
+      function(error){
+        deferred.reject(error);        
+      }
+    );
+    
+    return deferred.promise;
+  }
 }
