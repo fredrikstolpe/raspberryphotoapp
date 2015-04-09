@@ -1,0 +1,12 @@
+{
+    "name": "GlitchService",
+    "version": "0.0.0",
+    "description": "Raspberry photo app",
+    "dependencies": {
+        "express": "latest",
+        "configure": "latest",
+        "q": "latest",
+        "child-process-promise" : "latest"
+    },
+    "author": "fredrik"
+}
