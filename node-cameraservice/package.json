@@ -8,7 +8,8 @@
 	   "q": "latest",
 	   "moment": "latest",
 	   "node-gpio" : "latest",
-       "child-process-promise" : "latest"
+       "child-process-promise" : "latest",
+       "request" : "latest"       
     },
     "author": "fredrik"
 }

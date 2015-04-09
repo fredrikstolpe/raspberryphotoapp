@@ -1,5 +1,5 @@
 {
-	"port" : 80,
+	"port" : 8081,
 	"imageFolder" : "photos",
 	"image" : {
 		"width" : 640,

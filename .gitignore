@@ -27,4 +27,5 @@ node_modules
 # Users Environment Variables
 .lock-wscript
 
-node/photos
+node-cameraservice/photos
+node-glitchservice/uploads
