@@ -6,7 +6,8 @@
         "express": "latest",
         "configure": "latest",
         "q": "latest",
-        "child-process-promise" : "latest"
+        "child-process-promise" : "latest",
+        "multer" : "latest"
     },
     "author": "fredrik"
 }

@@ -4,6 +4,7 @@ var glitcher = require("./imageglitcher.js");
 var imHelper = require("./imhelper.js");
 var multer = require('multer');
 var fs = require("fs");
+var path = require('path');
 
 var done=false;
 
@@ -21,6 +22,8 @@ app.use(multer({
 	  done=true;
 	}
 }))
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/" + config.imageFolder, express.static(__dirname + "/" + config.imageFolder));
 
