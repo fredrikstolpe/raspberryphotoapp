@@ -54,8 +54,10 @@ module.exports = {
     return imHelper.exec(command, outFileName);
   },
 
-  turquoise : function(inFilePath, outFilePath){
+  turquoise : function(inFileName, outFileName, folder){
     var deferred = q.defer();
+    inFilePath = imHelper.prependFolder(inFileName, folder)
+    outFilePath = imHelper.prependFolder(outFileName, folder)
     var command = util.format("convert %s -colorspace Gray -lat 50x50 -black-threshold 50% -fill turquoise1 -opaque black %s", inFilePath, outFilePath);
     childProcess.exec(command)
     .then(
@@ -69,8 +71,10 @@ module.exports = {
     return deferred.promise;
   },
   
-  red : function(inFilePath, outFilePath){
+  red : function(inFileName, outFileName, folder){
     var deferred = q.defer();
+    inFilePath = imHelper.prependFolder(inFileName, folder)
+    outFilePath = imHelper.prependFolder(outFileName, folder)
     var command = util.format("convert %s -colorspace Gray -lat 50x50 -black-threshold 50% -fill red2 -opaque black %s", inFilePath, outFilePath);
     childProcess.exec(command)
     .then(
@@ -84,8 +88,11 @@ module.exports = {
     return deferred.promise;
   },  
 
-  darken : function(inFilePath, inFilePath2, outFilePath){
+  darken : function(inFileName, inFileName2, outFileName, folder){
     var deferred = q.defer();
+    inFilePath = imHelper.prependFolder(inFileName, folder)
+    inFilePath2 = imHelper.prependFolder(inFileName2, folder)
+    outFilePath = imHelper.prependFolder(outFileName, folder)
     var command = util.format("composite %s %s -compose darken %s", inFilePath, inFilePath2, outFilePath);
     childProcess.exec(command)
     .then(

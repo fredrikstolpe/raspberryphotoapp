@@ -50,6 +50,43 @@ app.get('/glitchphoto/:filename', function (req, res) {
 	)
 });
 
+app.get('/bwglitch/:filename', function(req, res){
+	glitcher.
+	turquoise(req.params.filename, imHelper.fileNameAppend(req.params.filename, "_t"), config.imageFolder)
+	.then(
+		function(value){
+			return glitcher.
+			red(req.params.filename, imHelper.fileNameAppend(req.params.filename, "_r"), config.imageFolder)
+		}
+	)
+	.then(
+		function (value){
+			return glitcher.
+			randomHorizontalRegionRoll(imHelper.fileNameAppend(req.params.filename, "_t"),imHelper.fileNameAppend(req.params.filename, "_t"),config.imageFolder)
+		}
+	)
+	.then(
+		function (value){
+			return glitcher.
+			randomHorizontalRegionRoll(imHelper.fileNameAppend(req.params.filename, "_r"),imHelper.fileNameAppend(req.params.filename, "_r"),config.imageFolder)
+		}
+	)	
+	.then(
+		function (value){
+			return glitcher.
+			darken(imHelper.fileNameAppend(req.params.filename, "_t"),imHelper.fileNameAppend(req.params.filename, "_r"),imHelper.fileNameAppend(req.params.filename, "_g"),config.imageFolder)
+		}
+	)		
+	.then(
+		function(value){
+      res.send(value);
+		},
+	  function(error){
+      res.send(error);
+	  }
+	)	
+});
+
 app.get('/splitchannels/:filename', function (req, res) {
 	var fileName = req.params.filename;
 	glitcher.
