@@ -5,32 +5,42 @@ var imHelper = require("./imhelper.js");
 var multer = require('multer');
 var fs = require("fs");
 var path = require('path');
-
-var done=false;
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database('data/glitchservice.db');
 
 var app = express();
-app.use(multer({
-	dest: './uploads/',
-	rename: function (fieldname, filename) {
- 	 return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
-	},
-	onFileUploadStart: function (file) {
-  	console.log(file.originalname + ' is starting ...')
-	},
-	onFileUploadComplete: function (file) {
-	  console.log(file.fieldname + ' uploaded to  ' + file.path)
-	  done=true;
-	}
-}))
+
+app.use(
+	multer({
+		dest: './' + config.uploadFolder + '/',
+		rename: function (fieldname, filename) {
+	 		return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
+		}
+	})
+);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/" + config.imageFolder, express.static(__dirname + "/" + config.imageFolder));
 
 app.post('/api/upload',function(req,res){
-  if(done==true){
-    console.log(req.files);
-    res.end("File uploaded.");
+  var file = req.files["image"];
+  console.log(file);
+  if (file != null){
+  	db.serialize(function(){
+  		console.log(file.name);
+			var stmt = db.prepare("INSERT INTO uploadedImages (fileName) VALUES(?)");
+			stmt.run(file.name); 
+			stmt.finalize();
+			var stmt = "select seq from sqlite_sequence where name='uploadedImages'";
+  		db.all(stmt, function(err, rows) {
+  			var response = { success : true, imageId : rows[0]['seq']};
+  			res.send(response);
+  		});
+  	});
+  }
+  else{
+		res.send({ success : false, error : "No file" });  	
   }
 });
 
