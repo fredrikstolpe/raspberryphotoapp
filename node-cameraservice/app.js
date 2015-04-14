@@ -13,7 +13,7 @@ var app = express();
 app.use("/" + config.imageFolder, express.static(__dirname + "/" + config.imageFolder));
 
 app.get('/upload', function(req, res){
-	fileUpload.uploadFile(util.format("%s/%s", config.folderName, 'diva.png'))
+	fileUpload.uploadFile(util.format("%s/%s", config.imageFolder, 'diva.png'))
 	.then(
 		function(value){
 			res.send(value);
@@ -28,7 +28,7 @@ app.get('/takephoto', function (req, res) {
 	camera.takePhoto(config.image.width, config.image.height, config.image.quality, config.imageFolder)
 	.then(
 		function(filename){
-			return fileUpload.uploadFile(util.format("%s/%s", config.folderName, filename));
+			return fileUpload.uploadFile(util.format("%s/%s", config.imageFolder, filename));
 		}
 	)
 	.then(
