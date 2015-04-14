@@ -15,7 +15,7 @@ module.exports = {
 		else{
 			self.cameraBusy = true;
 			var filename = moment().format("YYYYMMDDHHmmss-SSS.jpg");
-			var path = util.format("%s/%s", folderName, filename);
+			var path = util.format("./%s/%s", folderName, filename);
 			var command = util.format("raspistill -w %s -h %s -q %s -o %s", width, height, quality, path);
 			childProcess.exec(command)
 			.then(
