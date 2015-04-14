@@ -1,3 +1,4 @@
+var util = require("util");
 var express = require("express");
 var config = require("configure");
 var camera = require("./picamera.js");
@@ -11,29 +12,35 @@ var app = express();
 
 app.use("/" + config.imageFolder, express.static(__dirname + "/" + config.imageFolder));
 
-app.get('/request', function(req, res){
-	var r = request.post('http://localhost:8080/api/upload', function optionalCallback (err, httpResponse, body) {
-	  if (err) {
-	    return console.error('upload failed:', err);
-	  }
-	  console.log('Upload successful!  Server responded with:', body);
-	})
-	var form = r.form()
-	form.append('image', fs.createReadStream(__dirname + '/koala.jpg'))
+app.get('/upload', function(req, res){
+	fileUpload.uploadFile(util.format("%s/%s", config.folderName, 'diva.png'))
+	.then(
+		function(value){
+			res.send(value);
+		},
+		function(error){
+			res.send(error);
+		}
+	)
 });
 
 app.get('/takephoto', function (req, res) {
 	camera.takePhoto(config.image.width, config.image.height, config.image.quality, config.imageFolder)
 	.then(
-		function(value){
-			console.log(value);
-			res.send(value);
-		},
-		function(error){
-			console.log(error);
-			res.send(error);
+		function(filename){
+			return fileUpload.uploadFile(util.format("%s/%s", config.folderName, filename));
 		}
 	)
+	.then(
+		function(result){
+			res.send(result)
+		}
+	)
+	.fail(
+		function (error) {
+    	res.send(error);
+		}
+	);
 });
 
 /*
@@ -57,4 +64,4 @@ button.on("changed", function (value){
 button.listen();
 */
 app.listen(config.port);
-console.log("Up and running");
+console.log("Up and running on port " + config.port);
