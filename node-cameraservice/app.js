@@ -9,8 +9,8 @@ var fs = require("fs");
 //var gpio = require("node-gpio");
 
 var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+//var http = require('http').Server(app);
+var io      = require('socket.io').listen(server);
 
 io.on('connection', function(socket){
   console.log('a user connected');
