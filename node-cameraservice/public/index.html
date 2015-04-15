@@ -19,10 +19,13 @@
 	</style>
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
-	  var socket = io();
+	var socket = io();
+	socket.on('message', function(msg){
+    		document.getElementById("status").innerHTML = msg;
+  	});
 	</script>
 </head>
 <body>
-<h1>GROBIAN</h1>
+<h1 id="status">GROBIAN</h1>
 </body>
 </html>
