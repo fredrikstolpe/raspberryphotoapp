@@ -1,6 +1,7 @@
 {
 	"port" : 8081,
 	"imageFolder" : "photos",
+	"uploadFolder" : "uploads",
 	"uploadUri" : "http://glitch.grobian.net/api/upload",
 	"image" : {
 		"width" : 640,
