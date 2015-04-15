@@ -3,12 +3,20 @@ var express = require("express");
 var config = require("configure");
 var camera = require("./picamera.js");
 var fileUpload = require("./fileupload.js");
-
+var path = require('path');
 var fs = require("fs");
 
 //var gpio = require("node-gpio");
 
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/" + config.imageFolder, express.static(__dirname + "/" + config.imageFolder));
 

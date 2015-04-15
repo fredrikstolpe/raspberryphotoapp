@@ -9,7 +9,8 @@
       "moment": "latest",
       "node-gpio" : "latest",
       "child-process-promise" : "latest",
-      "request" : "latest"       
+      "request" : "latest",
+      "socket.io" : "latest"     
     },
     "author": "fredrik"
 }
