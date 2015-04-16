@@ -23,6 +23,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/" + config.imageFolder, express.static(__dirname + "/" + config.imageFolder));
 
+app.use("/" + config.uploadFolder, express.static(__dirname + "/" + config.uploadFolder));
+
 app.post('/api/upload',function(req,res){
   var file = req.files["image"];
   console.log(file);
