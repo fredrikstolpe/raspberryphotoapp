@@ -147,4 +147,4 @@ app.get('/addscanlines/:filename', function (req, res) {
 });
 
 app.listen(config.port);
-console.log("Up and running");
+console.log("Up and running on " + config.port);
