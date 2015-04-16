@@ -5,8 +5,7 @@ var imHelper = require("./imhelper.js");
 var multer = require('multer');
 var fs = require("fs");
 var path = require('path');
-var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('data/glitchservice.db');
+var dataService = require("./imagedataservice.js");
 
 var app = express();
 
@@ -29,24 +28,52 @@ app.post('/api/upload',function(req,res){
   var file = req.files["image"];
   console.log(file);
   if (file != null){
-  	db.serialize(function(){
-  		console.log(file.name);
-			var stmt = db.prepare("INSERT INTO uploadedImages (fileName) VALUES(?)");
-			stmt.run(file.name); 
-			stmt.finalize();
-			var stmt = "select seq from sqlite_sequence where name='uploadedImages'";
-  		db.all(stmt, function(err, rows) {
-  			var response = { success : true, imageId : rows[0]['seq']};
+  	dataService.insertImage(file.name)
+  	.then(
+  		function(imageId){
+  			var response = { success : true, imageId : imageId };
   			res.send(response);
-  		});
-  	});
+  		},
+  		function(error){
+  			var response = { success : false, error : error };
+  			res.send(response);
+  		}
+		);
   }
   else{
 		res.send({ success : false, error : "No file" });  	
   }
 });
 
-app.get('/glitchphoto/:filename', function (req, res) {
+app.get('/glitchphoto/:imageId', function (req, res) {
+	console.log("Service glitchphoto");
+	dataService.getImage(req.params.imageId)
+	.then(
+		function(fileName){
+  			var response = { success : true, fileName : fileName };
+  			res.send(response);
+		},
+		function(error){
+  			var response = { success : false, error : error };
+  			res.send(response);
+		}
+	)
+
+/*	glitcher.
+	randomHorizontalRegionRoll(req.params.filename, imHelper.fileNameAppend(req.params.filename, "_g"), config.imageFolder)
+	.then(
+	  function(value){
+      console.log(value);
+      res.send(value);
+	  },
+	  function(error){
+      console.log(error);
+      res.send(error);
+	  }
+	)*/
+});
+
+app.get('/glitchphotox/:filename', function (req, res) {
 	console.log("Service glitchphoto");
 	glitcher.
 	randomHorizontalRegionRoll(req.params.filename, imHelper.fileNameAppend(req.params.filename, "_g"), config.imageFolder)
