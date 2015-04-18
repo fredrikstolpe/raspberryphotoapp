@@ -45,7 +45,37 @@ app.post('/api/upload',function(req,res){
   }
 });
 
+app.get('/test', function(req, res){
+	res.send(req.headers.host);
+});
+
 app.get('/glitchphoto/:imageId', function (req, res) {
+	console.log("Service glitchphoto");
+	var fileName = "";
+	dataService.getImage(req.params.imageId)
+	.then(function(fileName){
+		console.log(fileName);
+		return glitcher.splitChannel(fileName, imHelper.fileNameAppend(fileName, "_r"), config.imageFolder, "R")
+	})
+	.then(function(result){
+		console.log(result);
+		return glitcher.splitChannel(fileName, imHelper.fileNameAppend(fileName, "_g"), config.imageFolder, "G");
+	})
+	.then(function(result){
+		console.log(result);
+		return glitcher.splitChannel(fileName, imHelper.fileNameAppend(fileName, "_b"), config.imageFolder, "B");
+	})	
+	.then(function(result){
+		var response = { success : true, path : util.format("/%s/%s", config.uploadFolder, result) };
+		res.send(response);
+	})
+	.catch(function (error){
+		var response = { success : false, error : error };
+		res.send(response);
+	})
+});
+
+app.get('/glitchphotoxx/:imageId', function (req, res) {
 	console.log("Service glitchphoto");
 	dataService.getImage(req.params.imageId)
 	.then(
