@@ -73,10 +73,10 @@ app.get('/glitchphoto/:imageId', function (req, res) {
 	)*/
 });
 
-app.get('/glitchphotox/:filename', function (req, res) {
+app.get('/rrglitch/:filename', function (req, res) {
 	console.log("Service glitchphoto");
 	glitcher.
-	randomHorizontalRegionRoll(req.params.filename, imHelper.fileNameAppend(req.params.filename, "_g"), config.imageFolder)
+	randomHorizontalRegionRoll(req.params.filename, imHelper.fileNameAppend(req.params.filename, "_g"), config.uploadFolder)
 	.then(
 	  function(value){
       console.log(value);
@@ -91,29 +91,29 @@ app.get('/glitchphotox/:filename', function (req, res) {
 
 app.get('/bwglitch/:filename', function(req, res){
 	glitcher.
-	turquoise(req.params.filename, imHelper.fileNameAppend(req.params.filename, "_t"), config.imageFolder)
+	turquoise(req.params.filename, imHelper.fileNameAppend(req.params.filename, "_t"), config.uploadFolder)
 	.then(
 		function(value){
 			return glitcher.
-			red(req.params.filename, imHelper.fileNameAppend(req.params.filename, "_r"), config.imageFolder)
+			red(req.params.filename, imHelper.fileNameAppend(req.params.filename, "_r"), config.uploadFolder)
 		}
 	)
 	.then(
 		function (value){
 			return glitcher.
-			randomHorizontalRegionRoll(imHelper.fileNameAppend(req.params.filename, "_t"),imHelper.fileNameAppend(req.params.filename, "_t"),config.imageFolder)
+			randomHorizontalRegionRoll(imHelper.fileNameAppend(req.params.filename, "_t"),imHelper.fileNameAppend(req.params.filename, "_t"), config.uploadFolder)
 		}
 	)
 	.then(
 		function (value){
 			return glitcher.
-			randomHorizontalRegionRoll(imHelper.fileNameAppend(req.params.filename, "_r"),imHelper.fileNameAppend(req.params.filename, "_r"),config.imageFolder)
+			randomHorizontalRegionRoll(imHelper.fileNameAppend(req.params.filename, "_r"),imHelper.fileNameAppend(req.params.filename, "_r"), config.uploadFolder)
 		}
 	)	
 	.then(
 		function (value){
 			return glitcher.
-			darken(imHelper.fileNameAppend(req.params.filename, "_t"),imHelper.fileNameAppend(req.params.filename, "_r"),imHelper.fileNameAppend(req.params.filename, "_g"),config.imageFolder)
+			darken(imHelper.fileNameAppend(req.params.filename, "_t"),imHelper.fileNameAppend(req.params.filename, "_r"),imHelper.fileNameAppend(req.params.filename, "_g"),config.uploadFolder)
 		}
 	)		
 	.then(
@@ -129,14 +129,14 @@ app.get('/bwglitch/:filename', function(req, res){
 app.get('/splitchannels/:filename', function (req, res) {
 	var fileName = req.params.filename;
 	glitcher.
-	splitChannel(fileName, imHelper.fileNameAppend(fileName, "_r"), config.imageFolder, "R")
+	splitChannel(fileName, imHelper.fileNameAppend(fileName, "_r"), config.uploadFolder, "R")
 	.then(function(result){
 		console.log(result);
-		return glitcher.splitChannel(fileName, imHelper.fileNameAppend(fileName, "_g"), config.imageFolder, "G");
+		return glitcher.splitChannel(fileName, imHelper.fileNameAppend(fileName, "_g"), config.uploadFolder, "G");
 	})
 	.then(function(result){
 		console.log(result);
-		return glitcher.splitChannel(fileName, imHelper.fileNameAppend(fileName, "_b"), config.imageFolder, "B");
+		return glitcher.splitChannel(fileName, imHelper.fileNameAppend(fileName, "_b"), config.uploadFolder, "B");
 	})	
 	.then(function(result){
 		console.log(result);		
@@ -150,7 +150,7 @@ app.get('/splitchannels/:filename', function (req, res) {
 app.get('/joinchannels/:filename', function (req, res) {
 	var fileName = req.params.filename;
 	glitcher.
-	joinChannels(imHelper.fileNameAppend(fileName, "_r"), imHelper.fileNameAppend(fileName, "_g"), imHelper.fileNameAppend(fileName, "_b"), imHelper.fileNameAppend(fileName, "_rgb"), config.imageFolder)
+	joinChannels(imHelper.fileNameAppend(fileName, "_r_g"), imHelper.fileNameAppend(fileName, "_g_g"), imHelper.fileNameAppend(fileName, "_b_g"), imHelper.fileNameAppend(fileName, "_rgb"), config.uploadFolder)
 	.then(function(result){
 		console.log(result);		
     res.send("Done!");		
