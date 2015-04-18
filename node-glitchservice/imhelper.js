@@ -41,9 +41,11 @@ module.exports = {
     .exec(command)
     .then(
       function(result){
+	console.log("Resolve:" + outFileName);
         deferred.resolve(outFileName);
       },
       function(error){
+	console.log("Err:" + error);
         deferred.reject(error);        
       }
     );

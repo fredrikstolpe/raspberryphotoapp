@@ -6,7 +6,7 @@ var multer = require('multer');
 var fs = require("fs");
 var path = require('path');
 var dataService = require("./imagedataservice.js");
-
+var util = require('util');
 var app = express();
 
 app.use(
@@ -51,28 +51,33 @@ app.get('/test', function(req, res){
 
 app.get('/glitchphoto/:imageId', function (req, res) {
 	console.log("Service glitchphoto");
-	var fileName = "";
+	var _fileName = "";
 	dataService.getImage(req.params.imageId)
 	.then(function(fileName){
-		console.log(fileName);
-		return glitcher.splitChannel(fileName, imHelper.fileNameAppend(fileName, "_r"), config.imageFolder, "R")
+		_fileName = fileName;
+		console.log(_fileName);
+		return glitcher.splitChannel(_fileName, imHelper.fileNameAppend(_fileName, "_r"), config.uploadFolder, "R")
 	})
 	.then(function(result){
 		console.log(result);
-		return glitcher.splitChannel(fileName, imHelper.fileNameAppend(fileName, "_g"), config.imageFolder, "G");
+		return glitcher.splitChannel(_fileName, imHelper.fileNameAppend(_fileName, "_g"), config.uploadFolder, "G");
 	})
 	.then(function(result){
 		console.log(result);
-		return glitcher.splitChannel(fileName, imHelper.fileNameAppend(fileName, "_b"), config.imageFolder, "B");
+		return glitcher.splitChannel(_fileName, imHelper.fileNameAppend(_fileName, "_b"), config.uploadFolder, "B");
 	})	
 	.then(function(result){
+		console.log(result);
+		console.log("grrR");
 		var response = { success : true, path : util.format("/%s/%s", config.uploadFolder, result) };
+		console.log("grr2");
+		console.log(response);
 		res.send(response);
 	})
-	.catch(function (error){
-		var response = { success : false, error : error };
-		res.send(response);
-	})
+//	.fail(function (error){
+//		var response = { success : false, error : error };
+//		res.send(response);
+//	})
 });
 
 app.get('/glitchphotoxx/:imageId', function (req, res) {
