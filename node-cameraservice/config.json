@@ -4,8 +4,8 @@
 	"uploadFolder" : "uploads",
 	"uploadUri" : "http://glitch.grobian.net/api/upload",
 	"image" : {
-		"width" : 640,
-		"height" : 640,
+		"width" : 1024,
+		"height" : 768,
 		"quality" : 50
 	},
 	"pins" : {
