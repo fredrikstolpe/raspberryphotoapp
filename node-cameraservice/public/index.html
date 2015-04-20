@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="sv-SE">
 <head>
-	<title>grobian.net</title>
-	<link href='http://fonts.googleapis.com/css?family=Lato:100,900' rel='stylesheet' type='text/css'>
+	<title>glitch</title>
+	<!--<link href='http://fonts.googleapis.com/css?family=Lato:100,900' rel='stylesheet' type='text/css'>-->
 	<style>
 	body{
 		background-color: black;
@@ -10,7 +10,7 @@
 	}
 	h1{
 		text-align:center;
-		font-family: 'Lato', sans-serif;
+		font-family: 'Helvetica', sans-serif;
 		font-weight: 900;
 		font-size:100px;
 		display:table-cell;
@@ -36,9 +36,11 @@
 	<script>
 	var socket = io();
 	socket.on('message', function(msg){
+		console.log(msg);
     		document.getElementById("status").innerHTML = msg;
   	});
 	socket.on('image', function(src){
+		console.log(src);
 		if (src == null || src == "")
 			document.getElementById("container").style.backgroundImage = "";
 		else

@@ -68,6 +68,9 @@ IMCommand.prototype.addJoinChannels = function(){
   this.commands.push("-set colorspace RGB -combine -gamma 0.8");
 }
 
+IMCommand.prototype.addContrast = function(){
+  this.commands.push("-contrast");
+}
   
 //Export
 

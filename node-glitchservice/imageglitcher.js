@@ -12,9 +12,9 @@ module.exports = {
       function(dimensions){
         console.log("Image dimensions: " + dimensions.width + " x " + dimensions.height);
         var command = new imCommandBuilder.IMCommand("convert", imHelper.prependFolder(inFileName, folder), imHelper.prependFolder(outFileName, folder));
-        for (var i = 0; i < 20; i++){
-          command.addRandomRegion(0,Math.floor(dimensions.height/10),0,dimensions.height-Math.floor(dimensions.height/10));
-          var rollWidth = Math.floor(dimensions.width/30);
+        for (var i = 0; i < 10; i++){
+          command.addRandomRegion(0,Math.floor(dimensions.height/20),0,dimensions.height-Math.floor(dimensions.height/20));
+          var rollWidth = Math.floor(dimensions.width/40);
           command.addRandomRoll(0-rollWidth,rollWidth,0,0);
         }
         imHelper.exec(command.render())
@@ -37,6 +37,7 @@ module.exports = {
   splitChannel : function(inFileName, outFileName, folder, channel){
     var command = new imCommandBuilder.IMCommand("convert", imHelper.prependFolder(inFileName, folder), imHelper.prependFolder(outFileName, folder));
     command.addSeparateChannel(channel);
+  //  command.addContrast();
     return imHelper.exec(command.render(), outFileName);
   },
 
@@ -44,6 +45,8 @@ module.exports = {
     var fileNames = [imHelper.prependFolder(inFileNameR, folder), imHelper.prependFolder(inFileNameG, folder), imHelper.prependFolder(inFileNameB, folder)];
     var command = new imCommandBuilder.IMCommand("convert", fileNames, imHelper.prependFolder(outFileName, folder));
     command.addJoinChannels();
+	console.log("WTF");
+	console.log(command);
     return imHelper.exec(command.render(), outFileName);
   },
 

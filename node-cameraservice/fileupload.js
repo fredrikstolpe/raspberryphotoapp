@@ -10,7 +10,8 @@ module.exports = {
 		  if (err) {
 		    deferred.reject(err);
 		  }
-		  deferred.resolve(body);
+			var responseObject = JSON.parse(body);
+		  deferred.resolve(responseObject);
 		})
 		var form = r.form()
 		form.append('image', fs.createReadStream(filePath))		

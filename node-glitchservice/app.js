@@ -49,6 +49,15 @@ app.get('/test', function(req, res){
 	res.send(req.headers.host);
 });
 
+app.get('/randomphoto/', function (req, res){
+	dataService.randomImage()
+	.then(
+		function(result){
+			res.send( "/" + config.uploadFolder + "/"+ result);
+		}
+	)
+});
+
 app.get('/glitchphoto/:imageId', function (req, res) {
 	console.log("Service glitchphoto");
 	var _fileName = "";
@@ -56,7 +65,11 @@ app.get('/glitchphoto/:imageId', function (req, res) {
 	.then(function(fileName){
 		_fileName = fileName;
 		console.log(_fileName);
-		return glitcher.splitChannel(_fileName, imHelper.fileNameAppend(_fileName, "_r"), config.uploadFolder, "R")
+		return glitcher.splitChannel(_fileName, imHelper.fileNameAppend(_fileName, "_r"), config.uploadFolder, "R");
+	})
+	.then(function(result){
+		console.log(result);
+		return glitcher.randomHorizontalRegionRoll(result, imHelper.fileNameAppend(result, "_g"), config.uploadFolder);
 	})
 	.then(function(result){
 		console.log(result);
@@ -64,20 +77,33 @@ app.get('/glitchphoto/:imageId', function (req, res) {
 	})
 	.then(function(result){
 		console.log(result);
-		return glitcher.splitChannel(_fileName, imHelper.fileNameAppend(_fileName, "_b"), config.uploadFolder, "B");
-	})	
+		return glitcher.randomHorizontalRegionRoll(result, imHelper.fileNameAppend(result, "_g"), config.uploadFolder);
+	})
 	.then(function(result){
 		console.log(result);
-		console.log("grrR");
+		return glitcher.splitChannel(_fileName, imHelper.fileNameAppend(_fileName, "_b"), config.uploadFolder, "B");
+	})
+	.then(function(result){
+		console.log(result);
+		return glitcher.randomHorizontalRegionRoll(result, imHelper.fileNameAppend(result, "_g"), config.uploadFolder);
+	})
+	.then(function(result){
+		console.log("Join");
+		return glitcher.joinChannels(imHelper.fileNameAppend(_fileName, "_r_g"), imHelper.fileNameAppend(_fileName, "_g_g"), imHelper.fileNameAppend(_fileName, "_b_g"), imHelper.fileNameAppend(_fileName, "_rgb"), config.uploadFolder);
+	})
+	.then(function(result){
+		console.log("Done");
+		console.log(result);
+		dataService.setGlitchedImage(req.params.imageId,result);
+		console.log("Sg done");
 		var response = { success : true, path : util.format("/%s/%s", config.uploadFolder, result) };
-		console.log("grr2");
 		console.log(response);
 		res.send(response);
 	})
-//	.fail(function (error){
-//		var response = { success : false, error : error };
-//		res.send(response);
-//	})
+	.fail(function (error){
+		var response = { success : false, error : error };
+		res.send(response);
+	})
 });
 
 app.get('/glitchphotoxx/:imageId', function (req, res) {

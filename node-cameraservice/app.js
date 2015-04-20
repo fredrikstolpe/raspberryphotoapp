@@ -4,6 +4,7 @@ var http = require('http');
 var config = require("configure");
 var camera = require("./picamera.js");
 var fileUpload = require("./fileupload.js");
+var service = require("./service.js");
 var path = require('path');
 var fs = require("fs");
 var q = require("q");
@@ -87,20 +88,32 @@ button.watch(
 	  		.then(
 				function(filename){
 	      				console.log("val " + value);
-					io.emit('message', 'Uploading...');
+					io.emit('message', '');
 					io.emit('image', util.format("/%s/%s", config.imageFolder, filename));
 					return fileUpload.uploadFile(util.format("./%s/%s", config.imageFolder, filename));
 	    			}
 	  		)
 			.then(
 				function(result){
-					busy = false;
-					if (result.success){
-					}
-					led.writeSync(1);
-					io.emit('message', 'Upload done ' + result);
+					io.emit('message', 'Glitching...');
+					//busy = false;
+					return service.glitchPhoto(result.imageId);
+					//led.writeSync(1);
+				}
+			)
+			.then(
+				function(result){
+					console.log("glitch done");
 					console.log(result);
-					q.resolve();
+					io.emit('message', "");
+					io.emit('image', util.format("%s%s", "http://localhost:8080", result.path));
+					setTimeout(
+						function(){
+							io.emit('message', 'Press button');
+							busy = false;
+							led.writeSync(1);
+						},5000
+					)
 				}
 			)
 			.fail(

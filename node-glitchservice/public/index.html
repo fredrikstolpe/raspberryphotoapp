@@ -1,24 +1,48 @@
 <!DOCTYPE html>
 <html lang="sv-SE">
 <head>
-	<title>grobian.net</title>
-	<link href='http://fonts.googleapis.com/css?family=Lato:100,900' rel='stylesheet' type='text/css'>
+	<title>glitch</title>
 	<style>
 	body{
 		background-color: black;
 		color:white;
 	}
-	h1{
-		text-align:center;
-		font-family: 'Lato', sans-serif;
-		font-weight: 900;
-		font-size:150px;
-		margin-top:100px;
-
+	html, body{
+		height:100%;
+		margin:0;
+		padding:0;
+	}
+	#container{
+		display:table;
+		background-size: auto 100%;
+		background-position:center;
+		width:100%;
+		height:100%;
 	}
 	</style>
+	<script>
+	function fetchJson(){
+		var httpReq = new XMLHttpRequest();
+		httpReq.onreadystatechange = function(){
+			if (httpReq.readyState === 4){
+				if (httpReq.status === 200){
+					updateImage(httpReq.responseText);
+				}
+			}
+		}
+		httpReq.open("GET","/randomphoto");
+		httpReq.send();
+	}
+	function updateImage(json){
+		document.getElementById("container").style.backgroundImage = "url(" + json + ")";
+		setTimeout(fetchJson,5000);
+	}
+	setTimeout(fetchJson,500);
+	</script>
 </head>
 <body>
-<h1>GROBIAN</h1>
+<div id="container">
+
+</div>
 </body>
 </html>

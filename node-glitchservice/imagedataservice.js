@@ -13,8 +13,14 @@ module.exports = {
 			db.all(stmt, function(err, rows) {
 				deferred.resolve(rows[0]['seq']);
 			});
-  	});
-    return deferred.promise;
+  		});
+		return deferred.promise;
+	},
+	setGlitchedImage : function(id, fileName){
+		var deferred = q.defer();
+		db.run("UPDATE uploadedImages set glitchedFileName = '" + fileName + "' where id = " + id);
+		deferred.resolve();
+		return deferred.promise;
 	},
 	getImage : function(id){
 		var deferred = q.defer();
@@ -27,6 +33,19 @@ module.exports = {
 				deferred.resolve("File not found");				
 			}
 		});
-    return deferred.promise;
+		return deferred.promise;
+	},
+	randomImage : function(){
+		var deferred = q.defer();
+		var stmt = "SELECT * from uploadedImages where glitchedFileName IS NOT NULL order by random() limit 1";
+		db.all(stmt, function(err,rows){
+			if (rows.length > 0 && rows[0].fileName != null){
+				deferred.resolve(rows[0].glitchedFileName);
+			}
+			else{
+				deferred.resolve("File not found");				
+			}
+		});
+		return deferred.promise;
 	}
 }

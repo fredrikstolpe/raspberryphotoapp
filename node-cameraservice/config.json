@@ -2,7 +2,9 @@
 	"port" : 8081,
 	"imageFolder" : "photos",
 	"uploadFolder" : "uploads",
-	"uploadUri" : "http://glitch.grobian.net/api/upload",
+	"serviceBaseUrl" : "localhost",
+	"servicePort" : 8080,
+	"uploadUri" : "http://localhost:8080/api/upload",
 	"image" : {
 		"width" : 1024,
 		"height" : 768,
